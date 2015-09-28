@@ -29,7 +29,51 @@ SKC的對稱式金鑰造成了一個嚴重的問題：當傳送方要使用SKC�
 *能夠公開$Y_A$與$Y_B$，是利用離散對數難題，讓得知Y,g,p的人無法計算出X
 
 這邊提出一個問題：兩個人拿到的Z是一樣的嗎?  
-<center> proof : ${Y_A}^{X_B} \ \ mod \ \ p \ \ = \ \ {Y_B}^{X_A} \ \ mod \ \ p$</center>
+proof : ${Y_A}^{X_B} \ \ mod \ \ p \ \ = \ \ {Y_B}^{X_A} \ \ mod \ \ p$
 <center> ${Y_A}^{X_B} \ \ mod \ \ p \ \ = \ \ ({g^{X_A} \ \ mod \ \ p})^{X_B} \ \ mod \ \ p$ </center>
 <center> 令$g^{X_A} \ \ mod \ \ p \ \ = \ \ a$，利用餘式定理$a = g^{X_A} - pK$ </center>
-<center> 則 ： $({g^{X_A} - pK})^{X_B} \ \=\ \g^{{X_A}{X_B}}\ \+\ \C^{X_B}_1 g^{\left {X_B}-1\right b}pK +‧‧‧+({pK})^{X_B}$ </center> 
+<center> 則 ： $({g^{X_A} - pK})^{X_B} \ \ = \ \ g^{X_A X_B}\ \ + \ \ C^{X_B}_1 g^{({X_B}-1) b}pK +...+({pK})^{X_B}$ </center> 
+<center> $= g^{X_A X_B} + pK(m)$ </center>
+<center> 由此可知$({g^{X_A} \ \ mod \ \ p})^{X_B} \ \ mod \ \ p \ \ = \ \ g^{X_A X_B} \ \ mod \ \ p$</center>
+<center> 同理可推得$({g^{X_B} \ \ mod \ \ p})^{X_A} \ \ mod \ \ p \ \ = \ \ g^{X_A X_B} \ \ mod \ \ p$</center>
+<center> 故$({g^{X_A} \ \ mod \ \ p})^{X_B} \ \ mod \ \ p \ \ = \ \ g^{X_A X_B} \ \ mod \ \ p \ \ = \ \ ({g^{X_B} \ \ mod \ \ p})^{X_A} \ \ mod \ \ p$</center>
+<center> 得證${Y_A}^{X_B} \ \ mod \ \ p \ \ = \ \ {Y_B}^{X_A} \ \ mod \ \ p$ </center>
+
+## 公開金鑰加密系統(Public Key Cryptography, PKC)
+
+![](/images/pkc.jpg)
+
+公開金鑰特點在於加解密所用的Key是不同把，加密的鑰匙能夠透過公開頻道傳送。  
+PKC利用質因數分解與離散對數難題來產生鑰匙。  
+最典型的例子為RSA加密：  
+收方選取兩個大質數1933和2131，算出兩個的乘積  
+n=p×q=1933×2131=4119223  
+選取一數e當作加密金匙K (公開金鑰)  
+$K_{er}  \ \ : \ \ e \ \ = \ \ 11$   
+計算e之乘法反元素d，作為解密金匙$K_dr$(私密金鑰)  
+使得 e×d=1 mod 1932×2130   
+$K_dr  \ \ : \ \ d \ \ = \ \ 748211$  
+加密時將明文M=2245613 轉換成密文 C   
+$C \ \ = \ \ 2245613^{11} \ \ mod \ \ 4119223 \ \ = \ \ 771889$  
+解密時將密文C轉換回明文   
+$M \ \ = \ \ 7718897482^{11} \ \ mod \ \ 4119223 \ \ = \ \ 2245613$  
+
+##金鑰管理 (Key Management)
+
+所有在系統上運作的key能夠在用一個master key來加密，但此master key該如何保管？  
+秘密分享 (secret sharing)  
+令 master key 值為三次方程式與y軸交點，再把方程式上的六個點交給不同人保管  
+之後要還原方程式時只需要四個點就夠了（防止意外，能夠允許其中兩點不見）  
+
+
+## A Cryptographic Game
+
+<center>在牆上有一個寶箱，上面有兩道鎖，這兩道鎖的鑰匙分別由Alice與Bob保管，這兩把鑰匙只能開啟屬於自己的那到鎖，令一道鎖不能開。</center>  
+<center>有一天Alice將月餅放入寶箱裡面，並且用他的鑰匙將寶箱鎖上，人就走了。</center>
+<center>過了一天後，Bob來到寶箱前看到上面有一到鎖，於是也用自己的鑰匙鎖上第二到鎖。</center>
+<center>又過了一天，Alice看到Bob鎖上後變把自己的那到鎖解開。</center>
+<center>最後，Bob用他的鎖將寶箱打開後，開心的吃著他的月餅。</center>
+<center>請問：這是SKC還是PKC？</center>
+
+我個人覺得這是SKC，我把這寶箱的兩道鎖看成兩種加密演算法，這樣一來Alice與Bob就分別用他們的key對月餅加解密，然後Alice解開他自己的鎖，之後Bob在解開自己的鎖。
+
