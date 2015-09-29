@@ -2,7 +2,7 @@ title: Applied_Cryptography_1
 date: 2015-09-28 11:21:06
 tags: Applied Cryptography
 ---
-來源 ： [投影片(1~23)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-1%20Introduction%20to%20Cryptography.pdf)
+來源 ： [chapter 1 (1~23 and 29)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-1%20Introduction%20to%20Cryptography.pdf), [Prove equivalence of Diffie-Hellman shared secret](http://math.stackexchange.com/questions/61358/prove-equivalence-of-diffie-hellman-shared-secret)
 
 ## 對稱式加密系統(Symmetric Key Cryptography, SKC)
 此加密系統特點是加解密所用的key為同一把，所以又稱為對稱式加密。
@@ -50,15 +50,15 @@ PKC利用質因數分解與離散對數難題來產生鑰匙。
 n=p×q=1933×2131=4119223  
 選取一數e當作加密金匙K (公開金鑰)  
 $K_{er}  \ \ : \ \ e \ \ = \ \ 11$   
-計算e之乘法反元素d，作為解密金匙$K_dr$(私密金鑰)  
+計算e之乘法反元素d，作為解密金匙{% math %}K_{dr}{% endmath %}(私密金鑰)  
 使得 e×d=1 mod 1932×2130   
-$K_dr  \ \ : \ \ d \ \ = \ \ 748211$  
+{% math %}K_{dr}  \ \ : \ \ d \ \ = \ \ 748211{% endmath %}  
 加密時將明文M=2245613 轉換成密文 C   
 $C \ \ = \ \ 2245613^{11} \ \ mod \ \ 4119223 \ \ = \ \ 771889$  
 解密時將密文C轉換回明文   
 $M \ \ = \ \ 7718897482^{11} \ \ mod \ \ 4119223 \ \ = \ \ 2245613$  
 
-##金鑰管理 (Key Management)
+## 金鑰管理 (Key Management)
 
 所有在系統上運作的key能夠在用一個master key來加密，但此master key該如何保管？  
 秘密分享 (secret sharing)  
