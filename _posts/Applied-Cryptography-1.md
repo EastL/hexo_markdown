@@ -1,4 +1,4 @@
-title: Applied_Cryptography_1
+title: Applied Cryptography-1
 date: 2015-09-28 11:21:06
 tags: Applied Cryptography
 ---
