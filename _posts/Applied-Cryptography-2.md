@@ -46,10 +46,10 @@ L(x)即為此k+1個點的方程式。由於{% math %}l_j(x){% endmath %}在{% ma
 <center>因此{% math %}t_{i+1} \ \ = \ \ at_n \ \ mod \ \ m{% endmath %}，{% math %}t_{i+2} \ \ = \ \ a^2t_n \ \ mod \ \ m{% endmath %}</center>
 <center>{% math %}\Rightarrow \ \ u_i \ \ = \ \ |t_{i+2} t_i \ \ - \ \ t_{i+1}^2| \ \ = \ \ a^2t_i^2 \ \ - \ \ a^2t_i^2 \ \ mod \ \ m \ \ = \ \ 0 \ \ mod \ \ m{% endmath %}</center>
 
-$u_i$為$m$的倍數，這邊探討一個問題，任意兩個$m$的倍數的最大公因數為$m$的機率是多少？這邊有個有趣的想法，任意兩個$m$的倍數可以看成$ma$、$mb$，而這兩個數又要最大公因數為$m$，意思不就是$a$與$b$要互質嗎？所以這個問題可以轉變成：任意兩個正整數互質的機率是多少？想必一些數學系的都知道答案了，這邊提供[Prime Theorem 2](http://classes.yale.edu/fractals/CalcTutorials/PowerSer/PrimeTheorems/PrimeTheorem2.pdf)、[互質的機率](http://beaver.ncnu.edu.tw/projects/emag/article/200512/%E4%BA%92%E8%B3%AA%E7%9A%84%E6%A9%9F%E7%8E%87.pdf)兩個連結讓大家參考，裡面有證明任意兩正整數互質的機率為{% math %}(\sum_{k=1}^\infty \frac{1}{k^2})^{-1}{% endmath %}，其值等於{% math %}\frac{6}{\pi^2}{% endmath %}，大概是0.6079(關於尤拉證明的平方倒數和可以參考[從調和級數到平方倒數和的意外](http://www5.hwsh.tc.edu.tw/web/fan/8))，而任意$n$個正整數互質的機率為{% math %}(\sum_{k=1}^\infty \frac{1}{k^n})^{-1}{% endmath %}，當$n$越大時其機率越接近1，所以在計算$m$時，$u_k$越多$m$值正確機率越高。
+$u_i$為$m$的倍數，這邊探討一個問題，任意兩個$m$的倍數的最大公因數為$m$的機率是多少？這邊有個有趣的想法，任意兩個$m$的倍數可以看成$ma$、$mb$，而這兩個數又要最大公因數為$m$，意思不就是$a$與$b$要互質嗎？所以這個問題可以轉變成：任意兩個正整數互質的機率是多少？想必一些數學系的都知道答案了，這邊提供[Prime Theorem 2](/papers/PrimeTheorem2.pdf)、[互質的機率](/papers/related_p.pdf)兩個連結讓大家參考，裡面有證明任意兩正整數互質的機率為{% math %}(\sum_{k=1}^\infty \frac{1}{k^2})^{-1}{% endmath %}，其值等於{% math %}\frac{6}{\pi^2}{% endmath %}，大概是0.6079(關於尤拉證明的平方倒數和可以參考[從調和級數到平方倒數和的意外](http://www5.hwsh.tc.edu.tw/web/fan/8))，而任意$n$個正整數互質的機率為{% math %}(\sum_{k=1}^\infty \frac{1}{k^n})^{-1}{% endmath %}，當$n$越大時其機率越接近1，所以在計算$m$時，$u_k$越多$m$值正確機率越高。
 
-這邊再分享另外一種解法：1968年George Marsagglia提出了[Random numbers fall mainly in the planes](http://www.ics.uci.edu/~fowlkes/class/cs177/marsaglia.pdf)，指出linear congruential generator所產生的亂數在n維度空間下會落在少數的超平面上，Haldir運用此觀念利用linear congruential generator產生的連續四個亂數便能計算出$m$，假設此四個亂數為$a$、$b$、$c$、$d$，$m$計算方法為：
+這邊再分享另外一種解法：1968年George Marsagglia提出了[Random numbers fall mainly in the planes](/papers/marsaglia.pdf)，指出linear congruential generator所產生的亂數在n維度空間下會落在少數的超平面上，Haldir運用此觀念利用linear congruential generator產生的連續四個亂數便能計算出$m$，假設此四個亂數為$a$、$b$、$c$、$d$，$m$計算方法為：
 <center>{% math %}m \ \ = \ \ \begin{vmatrix} a & b & 1 \\ b & c & 1 \\ c & d & 1 \\ \end{vmatrix}{% endmath %}</center>
-有關此種方法可以參考[How to crack a Linear Congruential Generator](http://www.reteam.org/papers/e59.pdf)。
+有關此種方法可以參考[How to crack a Linear Congruential Generator](/papers/crack_LCG.pdf)。
 
 
