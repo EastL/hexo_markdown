@@ -21,6 +21,7 @@ L(x)即為此k+1個點的方程式。由於{% math %}l_j(x){% endmath %}在{% ma
 <center> {% math %} L(x_i) \ \ = \ \ \sum_{j=0}^k y_j l_j(x_i) \ \ = \ \ \sum_{j=0}^k y_j \delta_{ij} \ \ = \ \ y_i {% endmath %} </center>
 故得到{% math %} L(x_i) \ \ = \ \ y_i {% endmath %}，此k+1個點為L(x)上的點。
 
+<hr>
 
 <h2>Stream Cipher and Block Cipher</h2>
 <h3>Methods to generate key stream (Pseudo Random Number)</h3>
@@ -29,7 +30,9 @@ L(x)即為此k+1個點的方程式。由於{% math %}l_j(x){% endmath %}在{% ma
 
 ![](/images/key.jpg)
 
-這邊將會介紹產生亂數的方法：Linear congruence method
+<hr>
+這邊將會介紹產生亂數的方法：
+<h4>Linear congruence method</h4>
 <center> {% math %}x_i \ \ \equiv \ \ ax_i \ \ + \ \ b \ \ mod \ \ m{% endmath %} </center>
 決定好$a$,$b$,$m$,$x_0$後，代入上述式子，{$x_i$}即為亂數。
 
@@ -52,4 +55,22 @@ $u_i$為$m$的倍數，這邊探討一個問題，任意兩個$m$的倍數的最
 <center>{% math %}m \ \ = \ \ \begin{vmatrix} a & b & 1 \\ b & c & 1 \\ c & d & 1 \\ \end{vmatrix}{% endmath %}</center>
 有關此種方法可以參考[How to crack a Linear Congruential Generator](/papers/crack_LCG.pdf)。
 
+<hr>
 
+<h4> Linear feedback shift register(LFSR) </h4>
+
+![](/images/lfsr.gif)
+<center>[from wiki](https://en.wikipedia.org/wiki/Linear_feedback_shift_register)</center>
+
+如上圖所示，這是一個4bit的LFSR，右邊電路的4bit暫存器就是我們要的亂數，他每次把右邊兩個bit拉出來做xor後，將暫存器往右shift一個bit，並將xor結果放到最左邊的bit，注意左邊的15個狀態，除了0000其餘都有在上面，因為只要出現全0之後狀態就都是0了 (0 xor 0 = 0)。在這張圖上是拉最後兩bit，那要如何知道拉哪些bit會讓亂數最亂呢？
+
+The max period of LFSR
+
+當一串數為亂數時，代表此串亂數不可預測，既然不可預測那這串數就沒有週期，換句話說這串數的週期為無限大。所以這邊要討論如何讓LFSR的週期最大。設定{% math %}b_n{% endmath %}為二進位數，當第n個bit要拉下來作xor時，{% math %}b_n{% endmath %}為1，反之不拉下來時{% math %}b_n{% endmath %}為0，{% math %}b(x) \ \ = \ \ b_4x^4 \ \ + \ \ b_3x^3 \ \ + \ \ b_2x^2 \ \ + \ \ b_1x \ \ + \ \ 1{% endmath %}，如果{% math %}b(x){% endmath %}是primitive多項式，則此LFSR週期最大，可產生m-sequence。  
+(Primitive polynomial之後上課會證明)   
+
+cryptanalysis(可預測)：LFSR若長度為n，則已知2n個連續output就可以得知後續所有(2n-1-2n)個output，解N元一次方程式。
+
+由於有上述預測攻擊，後來就有利用Nonlinear mapping的方法產生PN sequence。
+
+![PN Sequence Generator](/images/LFSR.jpg)
