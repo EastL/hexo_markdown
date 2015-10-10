@@ -2,7 +2,7 @@ title: Applied Cryptography-2
 date: 2015-09-29 05:56:36
 tags: Applied Cryptography
 ---
-來源 ： [chapter 1 (24~28)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-1%20Introduction%20to%20Cryptography.pdf)，[chapter 2 (1~21)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-2%20Secret-Key%20Cryptography.pdf)，[wiki(Lagrange polynomial)](https://en.wikipedia.org/wiki/Lagrange_polynomial)，[Cracking a linear congruential generator](http://security.stackexchange.com/questions/4268/cracking-a-linear-congruential-generator)
+來源 ： [chapter 1 (24~28)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-1%20Introduction%20to%20Cryptography.pdf)，[chapter 2 (1~22)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-2%20Secret-Key%20Cryptography.pdf)，[wiki(Lagrange polynomial)](https://en.wikipedia.org/wiki/Lagrange_polynomial)，[Cracking a linear congruential generator](http://security.stackexchange.com/questions/4268/cracking-a-linear-congruential-generator)
 
 在前一篇提到金鑰管理，是利用方程式上的點來分散管理，那麼要如何將點還原成方程式呢？
 
