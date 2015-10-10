@@ -24,6 +24,9 @@ L(x)即為此k+1個點的方程式。由於{% math %}l_j(x){% endmath %}在{% ma
 <hr>
 
 <h2>Stream Cipher and Block Cipher</h2>
+<center> 接下來就要進到傳統加密可怕的一堆cipher...</center>
+![](/images/Q__Q.gif)
+
 <h3>Methods to generate key stream (Pseudo Random Number)</h3>
 
 傳統的SKC是利用xor來進行加密，這種加密方式key要夠亂，1跟0出現的機率要差不多，才能讓密文變的不可預測 
@@ -74,3 +77,47 @@ cryptanalysis(可預測)：LFSR若長度為n，則已知2n個連續output就可�
 由於有上述預測攻擊，後來就有利用Nonlinear mapping的方法產生PN sequence。
 
 ![PN Sequence Generator](/images/LFSR.jpg)
+
+<hr>
+
+<h3> Stream Cipher </h3>
+
+有了LFSR基本觀念後，接下來我們利用它所產生的PN sequence來接stream cipher。Stream Cipher主要精神為與明文做XOR的key每個bit都不同，明文有多少個bit就需要產生多少個亂數bit來做XOR，因此如果要連續的產生亂數，就必須要有源源不絕的seed，這邊會介紹三種mod，分別是output feedback mode(OFB)、counter mode、cipher feedback mode(CFB)。
+
+![利用PN sequence產生亂數與明文做XOR](/images/PN.jpg)
+
+<h5> Output Feedback Mode (OFB) </h5>
+
+Output feedback mode主要是把產生出來的亂數取一個bit當作key，然後將結果當作下一次的seed，此種模式可以不受error propagation影響，如果有某個bit在傳送過程中出錯，接收方只會在此bit解錯，其餘bit能夠正常解回來，但如果傳送途中有發生bit loss，則會失去同步。
+
+![Output Feedback Mode](/images/OFB.jpg)
+
+<h5> Counter Mode </h5>
+
+counter mode 的seed為一個counter，此方法好處為能夠自由控制你要解第幾個bit，只要輸入正確的counter就好了，如果考慮到安全的話，E所設計的亂數要夠亂，假設輸入兩種input只差一個bit，通過亂數產生出來的亂數應該要差超過兩個bit以上，輸入與輸出應該毫無關係，這樣才是一個好的亂數設計。但此方法如果要做到random access，必須先知道要access第幾個bit，直觀上也不大方便。
+
+![Counter Mode](/images/CTR.jpg)
+
+<h5> Cipher Feedback Mode (CFB) </h5>
+
+Cipher feedback mode能夠實現自我同步，當傳送過程中發生error propagation或是bit loss，都能在經過一個register的大小後自我同步回來。他是將XOR後的cipher當作seed傳回register的第一個bit，當你要access第m個bit時，只要將m的前n個(register size)cipher當作seed便能正確取得key，不用像counter mode需要知道第幾個。
+
+![Cipher Feedback Mode](/images/CFB.jpg)
+
+下圖為cipher bit "A" lost時發生的狀況，圖中可以看到lost後有三個register狀態是亂掉的情況(register size為3)，但之後register又同步了。
+
+![](/images/CFB_error.jpg)
+
+<hr>
+
+<h2> Question ： Message Feedback Mode 能夠自我同步嗎？</h2>
+
+既然cipher是depend on message，那message feedback mode應該也可以自我同步囉？
+
+![Message Feedback Mode](/images/MFB.jpg)
+
+當然不行！仔細想想，如果拿message來當作feedback，那麼傳送途中發生任何錯誤，解出來的message也會是錯誤的，此時register會在繼續解下一個進來的cipher，但就算下一次的cipher是正確的，register已經錯誤了，故解回來的message並不會是正確的，因此只要錯了一個bit後，基本上以後的所有bit都毀了。下圖為message feedback mode 的實際例子。
+
+![](/images/MFB_example.jpg)
+
+
