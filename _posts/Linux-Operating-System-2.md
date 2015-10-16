@@ -59,5 +59,77 @@ void main()
 
 看一下剛剛G function，我直接將傳進來的參數a return回去，所以assembler就直接將ebp + 8位置的值丟進eax了。
 
+<h2> x64 Calling Conventions </h2>
+x64與x32不一樣的是，如果傳遞的參數在六個以下時，它是利用暫存器去傳送的，看一下下面程式：
 
+{% codeblock %}
+int G(int a, int b, int c, int d, int e, int f, int g, int h)
+{
+    return g;
+}
 
+void main()
+{
+    int a;
+    a = G(1, 2, 3, 4, 5, 6, 7, 8);
+}
+{% endcodeblock %}
+
+我把上面的程式碼丟到64 bit ubuntu編譯後，objdump如下圖：
+
+![](/images/x64_call.jpg)
+
+可以看到紅色框的部分6個參數都移到了暫存器當中，而當到第七個參數時，compiler是把它放到了rsp的位置，從stack底端往上放。
+
+![](/images/x64_callerstack.jpg)
+
+而callee要拿參數時，前六個當然是從暫存器拿，第七個開始就從rbp + 16開始：
+
+![](/images/x64_callee.jpg)
+
+由於我是return g，它是第七個參數，所以將rbp + 10(hex)移到eax。
+
+![](/images/x64_calleestack.jpg)
+
+<h2> Callee-Save Register vs. Caller-Save Register </h2>
+這可能會被文字混淆...
+
+caller saved register意思是當caller要呼叫callee時，caller會預先把某幾個暫存器的值存在stack上，然後呼叫了callee後callee可以使用者些暫存器。所以caller saved register是給callee用的。
+
+而callee saved register是當caller呼叫了callee時，為了確保不會更動到register的值，callee會先把暫存器的值存起來，等到做完所有動作要return回caller之前再把剛存起來的值還給暫存器，所以callee saved register是callee幫caller存的。
+
+<h2> IA32 Process Address Space Layout </h2>
+
+Address space意思是一堆address的集合，在32bit的linux環境中每個process都會有4G byte的address space，前3G byte為user address space，從0x00000000 ~ 0xBFFFFFFF；最後1G byte則是kernel address space，從0xC0000000 ~ 0xFFFFFFFF，所以學linux kernel的人要知道0xC0000000，這非常重要!!!!(老師說的XDD)。下圖就是IA32 linux的address space：
+
+![IA32 Linux Process Address Space Layout](/images/IA32_address_space.jpg)
+
+<h2> x64 Process Address Space Layout </h2>
+
+x64的address space比較特別，由於他有{% math %} 2^64 {% endmath %}bit的address，相當於16EB，如果要將這麼大的virtual address都implement到實際的記憶體上的話，會造成page table複雜度提升，況且正常作業系統也用不到這麼龐大的記憶體空間，於是AMD決定只用前48bit的address，使用空間大概是256TB，創造了一個叫做canonical form的規則。
+
+![canonical form](/images/cannonical.jpg)
+
+這規則其實還蠻人性化的(?  看一下目前48bit的設計，整個address space分為兩大區塊，一邊從底部長另一邊從頂部長，先說明一下canonical form的規則，它除了規定只能用前48個bit之外還外加了一個規定，就是沒用到的bit，從第49個bit開始往後都要跟第48個bit一樣，也就是說如果第48個bit為0之後就全部都要是0，如果第48個bit為1之後就都要是1，有了這個規則後，如果你的記憶體是單向長的話，當你長到00008000 00000000的時候，你的第48個bit為1，但第49bit後卻全都是0，這樣就違反了canonical form。
+
+而user space跟kernel space剛好一人一半(從kernel 2.6.11版本後)，高位址的部分是kernel address，另一半低位址則是user space。下面的位址分部是參考[這邊](https://www.kernel.org/doc/Documentation/x86/x86_64/mm.txt)。
+
+{% codeblock %}
+0000000000000000 - 00007fffffffffff (=47 bits) user space, different per mm
+hole caused by [48:63] sign extension
+ffff800000000000 - ffff87ffffffffff (=43 bits) guard hole, reserved for hypervisor
+ffff880000000000 - ffffc7ffffffffff (=64 TB) direct mapping of all phys. memory
+ffffc80000000000 - ffffc8ffffffffff (=40 bits) hole
+ffffc90000000000 - ffffe8ffffffffff (=45 bits) vmalloc/ioremap space
+ffffe90000000000 - ffffe9ffffffffff (=40 bits) hole
+ffffea0000000000 - ffffeaffffffffff (=40 bits) virtual memory map (1TB)
+... unused hole ...
+ffffec0000000000 - fffffc0000000000 (=44 bits) kasan shadow memory (16TB)
+... unused hole ...
+ffffff0000000000 - ffffff7fffffffff (=39 bits) %esp fixup stacks
+... unused hole ...
+ffffffff80000000 - ffffffffa0000000 (=512 MB)  kernel text mapping, from phys 0
+ffffffffa0000000 - ffffffffff5fffff (=1525 MB) module mapping space
+ffffffffff600000 - ffffffffffdfffff (=8 MB) vsyscalls
+ffffffffffe00000 - ffffffffffffffff (=2 MB) unused hole
+{% endcodeblock %}
