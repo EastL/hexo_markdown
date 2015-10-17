@@ -91,3 +91,21 @@ Let p be a prime. For every a such that gcd(a,p) = 1, then
 <h6> Euler’s Generalization of  Fermat’ s Theorem </h6>
 For every a and n such that gcd(a,n) = 1, then
 <center> {% math %} a^{ \phi (n)} \ \ mod \ \ n \ \ = \ \ 1 {% endmath %} </center>
+
+證明：定義一集合為n的RSR，{ {% math %} r_1, \ \ r_2, \ \ ... \ \ , \ \ r_{ \phi (n) } {% endmath %} }，則我們能利用類似compute inverse的證明，{ {% math %} ar_1 \ \ mod \ \ n,.....,ar_{ \phi (n) } \ \ mod \ \ n {% endmath %} }為{ {% math %} r_1, \ \ r_2, \ \ ... \ \ , \ \ r_{ \phi (n) } {% endmath %} }的重排，因此
+<center> {% math %} \prod_{i=1}^{ \phi (n) }(ar_i \ \ mod \ \ n) \ \ \equiv \ \ \prod_{i=1}^{ \phi (n) }r_i \ \ (mod \ \ n) {% endmath %} </center>
+<center> {% math %} (a^{ \phi (n)}) \prod_{i=1}^{ \phi (n) } r_i \ \ \equiv \ \ \prod_{i=1}^{ \phi (n) } r_i \ \ (mod \ \ n) {% endmath %} </center>
+<center> {% math %} \because gcd( \prod_{i=1}^{ \phi (n) }r_i, \ \ n ) \ \ = \ \ 1{% endmath %} </center>
+<center> {% math %} \therefore \prod_{i=1}^{ \phi (n) }r_i {% endmath %} 有反元素 </center>
+<center> {% math %} (a^{ \phi (n)}) \prod_{i=1}^{ \phi (n) } r_i (\prod_{i=1}^{ \phi (n) } r_i)^{-1} \equiv \ \ \prod_{i=1}^{ \phi (n) } r_i (\prod_{i=1}^{ \phi (n) } r_i)^{-1} \ \ (mod \ \ n) {% endmath %} </center>
+<center> {% math %} a^{ \phi (n) } \ \ \equiv \ \ 1 \ \ (mod \ \ n) {% endmath %} </center>
+
+在上述的證明中有一點值得探討，之前證明的Computing Inverse是指小於n的所有數值帶入ai mod n的話會有重牌效果，但是這邊的{ {% math %} r_1, \ \ r_2, \ \ ... \ \ , \ \ r_{ \phi (n) } {% endmath %} }只包含了n的RSR，所以老師額外的證明了當a < n時此狀況還是能成立(由於之後的加密系統所用到的a都是小於n，大於n的狀況我之後有時間會去查)。由於a < n，且a與n互質，故a也是n的RSR裡的元素：
+
+證明：Let a and b {% math %} \in {% endmath %} RSR, then (a*b mod n) {% math %} \in {% endmath %} RSR這邊利用反證法：
+
+<center> {% math %} r \ \ = \ \ (a*b \ \ mod \ \ n) \ \ \notin \ \ RSR \ \ and \ \ gcd(r,n) \ \ = \ \ t>1 {% endmath %} </center>
+<center> {% math %} \because ab \ \ = \ \ r \ \ + \ \ kn {% endmath %} </center>
+<center> {% math %} \therefore \frac{ab}{t} \ \ = \ \ \frac{r}{t} \ \ + \ \ k \frac{n}{t} {% endmath %} </center>
+<center> so, t|a or t|b and t|n {% math %} \Rightarrow a \ \ or \ \ b \ \ \notin \ \ RSR \ \ \rightarrow \leftarrow {% endmath %} </center>
+<center>得證(a*b mod n) {% math %} \in {% endmath %} RSR</center>
