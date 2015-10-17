@@ -106,7 +106,7 @@ Address space意思是一堆address的集合，在32bit的linux環境中每個pr
 
 <h2> x64 Process Address Space Layout </h2>
 
-x64的address space比較特別，由於他有{% math %} 2^64 {% endmath %}bit的address，相當於16EB，如果要將這麼大的virtual address都implement到實際的記憶體上的話，會造成page table複雜度提升，況且正常作業系統也用不到這麼龐大的記憶體空間，於是AMD決定只用前48bit的address，使用空間大概是256TB，創造了一個叫做canonical form的規則。
+x64的address space比較特別，由於他有{% math %} 2^{64} {% endmath %}bit的address，相當於16EB，如果要將這麼大的virtual address都implement到實際的記憶體上的話，會造成page table複雜度提升，況且正常作業系統也用不到這麼龐大的記憶體空間，於是AMD決定只用前48bit的address，使用空間大概是256TB，創造了一個叫做canonical form的規則。
 
 ![canonical form](/images/cannonical.jpg)
 
