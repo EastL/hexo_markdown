@@ -79,7 +79,7 @@ void main()
 ![](/images/ret2lib_stack4.jpg)
 
 接著執行system()時，會先push ebp，接著準備好要給system()用的stack，此時我們剛剛塞的"/bin/sh"字串起始位置正好是ebp+8，大功告成。   
-這邊額外講一下我一開始的盲點，我一直認為return address上面的參數不是會被回收嗎？那剛塞的/bin/sh字串不就被回收掉了......其實回收這動作是在caller當中，而你return到的地方正常來講應該是要到caller，但是這邊攻擊流程式讓他到達system()，所以參數並沒有被回收。
+這邊額外講一下我一開始的盲點，我一直認為return address上面的參數不是會被回收嗎？那剛塞的/bin/sh字串不就被回收掉了......其實回收這動作是在caller當中，而你return到的地方正常來講應該是要到caller，但是這邊攻擊流程是讓他到達system()，所以參數並沒有被回收。
 
 /* FIXME */
 heap跟BSS的overflow老師這邊很快就帶過，我有時間研究一下後再補上。
