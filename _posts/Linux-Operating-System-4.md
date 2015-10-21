@@ -41,4 +41,29 @@ tags: Linux Operating System
     +   Reserved bit
     +   AVL flag
 
-    DPL是表示此segment的執行權限，CPU查到此segment時，會將這個Descriptor的DPL跟segment register的CPL做比對，來看目前是否有權限執行。
+    DPL是表示此segment的執行權限，CPU查到此segment時，會將這個Descriptor的DPL跟segment register的CPL做比對，來看目前是否有權限執行。而Segment Descriptor又分為以下幾種：
+
+    +   Code Segment Descriptor
+    +   Data Segment Descriptor
+    +   Task State Segment Descriptor 
+    +   Local Descriptor Table Descriptor 
+
+    Task State Segment Descriptor(TSSD)是用在process切換時，儲存睡眠的proces暫存器狀態。下圖是Segment Descriptors的實際結構圖：
+
+    ![](/images/segment_descriptor.jpg)
+
+*   GDT v.s. LDT
+
+    Segment Descriptors 會存在Global Descriptor Table (GDT) 或者Local Descriptor Table (LDT)這兩個table當中。在GDT裡面儲存的Descriptors是所有process都能夠使用的，所以一顆CPU只會有一個GDT；而LDT則是給各別的process使用，process無法存取別人的LDT。GDT的起始位置會存在gdtr暫存器裡，gdtr是32 bit的linear address以及16 bit的 table 大小：
+
+    ![](/images/gdtr.jpg)
+
+    而LDT的起始位置是存在ldtr當中：
+
+    ![](/images/ldtr.jpg)
+
+由於Segment Selector 的index只有13個bit，因此GDT最多只能有{% math %} 2^{13} {% endmath %}個entry，GDT的index最小從0開始。接下來看Intel processor如何將logical address轉換成linear address的：
+ 
+![](/images/trans_address.jpg)
+
+透過selector找到相對應的GDT或LDT後，根據index找到descriptor，再從descriptor裡面找到base address，然後跟offset相加就得到linear address啦！
