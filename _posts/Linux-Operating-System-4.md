@@ -67,3 +67,13 @@ tags: Linux Operating System
 ![](/images/trans_address.jpg)
 
 透過selector找到相對應的GDT或LDT後，根據index找到descriptor，再從descriptor裡面找到base address，然後跟offset相加就得到linear address啦！
+
+<h2> Segmentation in Linux </h2>
+在linux kernel中他不想要用x86架構的segmentation，他讓所有的segment的起始位置都是00000000，所有的segment大小都是ffffffff，因此每個segment都可以用到整個4G的記憶體空間。由於每個segment的base都是00000000，因此在linux底下的logical offset就是他的virtual address。下圖為linux的descriptor：
+
+![](/images/linux_dc.jpg)
+
+*   Privilege Level Change
+    cs暫存器的RPL如果換成了不同的mode其他ds或是ss暫存器也要跟著切換。
+
+剩下的linux GDT就到下次講比較完整。
