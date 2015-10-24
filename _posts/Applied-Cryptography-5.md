@@ -2,7 +2,7 @@ title: Applied Cryptography-5
 date: 2015-10-21 21:20:38
 tags: Applied Cryptography
 ---
-來源：[chapter 3(23~31)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-3%20Number%20Theory.pdf)[Number Theory II (3 ~ 4)](http://web.math.isu.edu.tw/yeh/2013Fall/GE/Lectures/L5/L5.pdf)
+來源：[chapter 3(23~31)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-3%20Number%20Theory.pdf)，[Number Theory II (3 ~ 4)](http://web.math.isu.edu.tw/yeh/2013Fall/GE/Lectures/L5/L5.pdf)
 
 在上一次的尤拉函數中，我們推得了費瑪理論的通式{% math %} a^{ \phi (n) } \ \ mod \ \ n \ \ = \ \ 1 \ \ if \ \ gcd(a,n)=1 {% endmath %}，這個式子對於餘數系統的乘法反元素非常有幫助，以上面例子來說，a在餘數系統中的乘法反元素就是{% math %} a^{ \phi (n) - 1} {% endmath %}，但如果考慮到計算量的話我們會想讓a的指數越小越好，因此在n=pq, p、q都是質數情況下，我們可以將{% math %} a^{ \phi (n) } \ \ mod \ \ n \ \ = \ \ 1 {% endmath %} 改成{% math %} a^{ lcm(p-1,q-1) } \ \ mod \ \ n \ \ = \ \ 1 {% endmath %}。(關於此式子小弟還沒想通，之後再補上證明)
 
@@ -57,9 +57,9 @@ while (X≠0) do
 return Y*g (=gcd(a, b))
 {% endcodeblock %}
 
-由於在電腦做運算時，除以2相當於往右shift一個bit，判斷是否為偶數也是看最後一個bit是否為0，因此先將所有2的因數提出來，紀錄在g，接著X與Y沒有2的公因數後代表著有2的因數也沒用了，除掉；接下來利用剛剛的gcd(b, a mod b) = gcd(a, b)原理，可以知道gcd(b, a - b) = gcd(a, b)，可以將X跟Y相減後又跑出2的因數了(奇數-奇數=偶數)，除掉，然後再繼續計算gcd(|X-Y|/2, XorY)，值到最後X為零時Y為因數2以外的公因數，因此Yg為最大公因數。
+由於在電腦做運算時，除以2相當於往右shift一個bit，判斷是否為偶數也是看最後一個bit是否為0，因此先將所有2的因數提出來，紀錄在g，接著X與Y沒有2的公因數後代表著有2的因數也沒用了，除掉；接下來利用剛剛的gcd(b, a mod b) = gcd(a, b)原理，可以知道gcd(b, a - b) = gcd(a, b)，可以將X跟Y相減後又跑出2的因數了(奇數-奇數=偶數)，除掉，然後再繼續計算gcd(|X-Y|/2, XorY)，直到最後X為零時Y為因數2以外的公因數，因此Yg為最大公因數。
 
-接著利用輾轉相除法來計算模數的乘法反元素，首先先來看一下下列的線性組合證明：
+接著利用輾轉相除法來計算模數的乘法反元素，首先先來看一下下列的線性組合證明(貝祖定理)：
 *   ax + by = gcd(a,b)  (a,b,x,y 為整數) 證明此線性組合存在
     
     <center> 假設 ax + by = m，m為a與b的線性組合最小正整數解 </center>
@@ -75,7 +75,7 @@ return Y*g (=gcd(a, b))
     <center> 得知 m ≤ gcd(a, b) -----(2) </center>
 
 由上述(1)(2)可以知道gcd(a, b) ≤ m且m ≤ gcd(a, b)，因此 m = gcd(a, b)得證。所以如果要找 mod f 情況下d的反元素(f,d互質)，我們可以知道gcd(f,d)=1，因此 fa + db = 1必定存在，而{% math %} fa \ \ + \ \ db \ \ \equiv \ \ db \ \ (mod \ \ f) {% endmath %}，故{% math %} d^{-1} \ \ \equiv \ \ b \ \ (mod \ \ f){% endmath %}。
-下列為歐基里德輾轉相除找線性組合的演算法：
+下列為歐基里德輾轉相除找線性組合的演算法(貝祖等式)：
 *   Extended EUCLIDEAN(d, f), f>d>0
     {% codeblock %}
     (X1,X2,X3) = (1, 0, f), (Y1,Y2,Y3) = (0, 1, d)
@@ -88,3 +88,25 @@ return Y*g (=gcd(a, b))
     goto step 2
     {% endcodeblock %}   
 
+此演算法其實就是貝祖等式的[Iterative](https://en.wikipedia.org/wiki/Iterative_method)做法，普遍高中利用輾轉相除求線性方程的整數解都是用Recursive Method，Recursive做法就是先把a跟b輾轉相除算出最大公因數後，再將每次相除的過程式子一一列出，列到最大公因數出現後，再一行一行的把數字替換成a跟b的倍數，詳細介紹可以看[這邊](https://ccjou.wordpress.com/2012/11/16/%E5%88%A9%E7%94%A8%E5%9F%BA%E6%9C%AC%E5%88%97%E9%81%8B%E7%AE%97%E5%AF%A6%E7%8F%BE%E6%93%B4%E5%B1%95%E6%AD%90%E5%B9%BE%E9%87%8C%E5%BE%97%E6%BC%94%E7%AE%97%E6%B3%95/)。而接下來將介紹貝祖等式的Iterative概念，我們以80跟36來做例子：
+
+![](/images/pezu.jpg)
+
+上列式子先給定兩個式子①跟②，而這兩個式子要做的事情就是右邊的輾轉相除法得到的結果，圖中可以看到我一直維持著 80x + 36y = a 的線性式子。
+
+![](/images/pezu2.jpg)
+
+上圖可以知道最後輾轉相除結果是0時，最大公因數就是上一次的答案，也就是4，而我算完最大公因數時，貝祖等式也就出現了(Iterative)。上面的演算法就是利用此精神撰寫，首先初始化X，X1為f的係數，X2為d的係數，X3為f跟d的線性組合結果，Y跟T也是此結構，所以每次做完一輪輾轉相除Y是最新的結果，因此當最後Y3等於0時表示X3就是最大公因數，等於1時兩數互質。
+
+<hr>
+
+<h2> Chinese Remainder Theorem (C.R.T.) </h2>
+中國餘數定理起源為[韓信點兵](http://episte.math.ntu.edu.tw/articles/sm/sm_01_01_2/index.html)，「兵不知其數，三三數之剩二，五五數之剩三，七七數之剩二。」這句話點出了中國餘數定理的精隨，也成為現代數論跟幾何重要定理之一。上面這句話有個重要的概念：當你要處理某個巨大複雜的數據時(兵不知其數)，可以將此數據分散處理(三三數之剩二，五五數之剩三，七七數之剩二)，處理完後再合併為原來數據。接下來介紹中國餘數定理(孫子定理)：
+令{% math %} z_1, \ \ z_2, \ \ ... \ \ , \ \ z_k {% endmath %}為兩兩互質的整數，且{% math %} x \ \ mod \ \ z_k \ \ = \ \ x_k {% endmath %}，$x_k$為已知，那麼當{% math %} n \ \ = \ \ \prod_{i=1}^k \ \ z_i {% endmath %} 且 {% math %} x \ \ \in \ \ [0, n-1]{% endmath %}，則x能透過CRT計算出來。
+
+![](/images/crt.jpg)
+
+CRT在現代工業上用在許多地方，這邊用電腦當例子，上圖中左邊為超級電腦，可以處理n位元，右邊四台為一般市面的筆電。假設今天要計算很大的數字的加法跟乘法運算，我們可以將很大的數字分配給右邊四台電腦，而且四台電腦能夠同時處理較小的數字，處理完後再丟回原本的超級電腦。
+
+<h4>CRT Form:</h4>
+<center> {% math %}let \ \ n \ \ = \ \ \prod_{i=1}^k z_i \ \ and \ \ x \ \ mod \ \ z_i \ \ = \ \ x_i, \ \ then \ \ x \ \ = \ \ \sum_{i=1}^k x_i \ \ * \ \ ( \frac{n}{z_i} ) \ \ * \ \ [( \frac{n}{z_i})^{-1} \ \ mod \ \ z_i] \ \ mod \ \ n {% endmath %} </center>
