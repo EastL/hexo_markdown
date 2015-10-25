@@ -2,7 +2,7 @@ title: Applied Cryptography-5
 date: 2015-10-21 21:20:38
 tags: Applied Cryptography
 ---
-來源：[chapter 3(23~31)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-3%20Number%20Theory.pdf)，[Number Theory II (3 ~ 4)](http://web.math.isu.edu.tw/yeh/2013Fall/GE/Lectures/L5/L5.pdf)
+來源：[chapter 3(23~32)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-3%20Number%20Theory.pdf)，[Number Theory II (3 ~ 4)](http://web.math.isu.edu.tw/yeh/2013Fall/GE/Lectures/L5/L5.pdf)
 
 在上一次的尤拉函數中，我們推得了費瑪理論的通式{% math %} a^{ \phi (n) } \ \ mod \ \ n \ \ = \ \ 1 \ \ if \ \ gcd(a,n)=1 {% endmath %}，這個式子對於餘數系統的乘法反元素非常有幫助，以上面例子來說，a在餘數系統中的乘法反元素就是{% math %} a^{ \phi (n) - 1} {% endmath %}，但如果考慮到計算量的話我們會想讓a的指數越小越好，因此在n=pq, p、q都是質數情況下，我們可以將{% math %} a^{ \phi (n) } \ \ mod \ \ n \ \ = \ \ 1 {% endmath %} 改成{% math %} a^{ lcm(p-1,q-1) } \ \ mod \ \ n \ \ = \ \ 1 {% endmath %}。(關於此式子小弟還沒想通，之後再補上證明)
 
@@ -110,3 +110,16 @@ CRT在現代工業上用在許多地方，這邊用電腦當例子，上圖中�
 
 <h4>CRT Form:</h4>
 <center> {% math %}let \ \ n \ \ = \ \ \prod_{i=1}^k z_i \ \ and \ \ x \ \ mod \ \ z_i \ \ = \ \ x_i, \ \ then \ \ x \ \ = \ \ \sum_{i=1}^k x_i \ \ * \ \ ( \frac{n}{z_i} ) \ \ * \ \ [( \frac{n}{z_i})^{-1} \ \ mod \ \ z_i] \ \ mod \ \ n {% endmath %} </center>
+這邊用i=2時說明：令$z_1$ = p，$z_2$ = q，則$x_1$在[o, p-1]，$x_2$在[0, q-1]，且pq互質，x可以透過以下算式得到：
+<center> {% math %} x \ \ = \ \ (x_1 * a * q \ \ + \ \ x_2 * b * p ) \ \ mod \ \ (p*q) {% endmath %} </center>
+a,b定義如下：{% math %} a \ \ \equiv \ \ q^{-1} (mod \ \ p) \  \ and \  \ b \ \ \equiv \ \ p^{-1} (mod \ \ q)  {% endmath %}
+這邊運用到一項概念：(L mod(pq))mod p = L mod p，所以當x mod p時，$x_2$那項會被消掉，但我們的目的是要讓x mod p = $x_1$，因此還需要消掉q，所以我們定義了一個a在mod p底下為q的反元素，因此最後就會只剩下$x_1$。
+
+<center> {% math %} x \ \ mod \ \ p \ \ = \ \ (x_1aq \ \ + \ \ x_2bp \ \ mod \ \ pq) \ \ mod \ \ p  {% endmath %} </center>
+<center> {% math %} = \ \ (x_1aq \ \ + \ \ x_2bp) \ \ mod \ \ p {% endmath %} </center>
+<center> {% math %} = \ \ (x_1 * 1 \ \ + \ \ 0) \ \ mod \ \ p \ \ ( \because aq \ \ mod \ \ p \ \ = \ \ 1 ) {% endmath %} </center>
+<center> {% math %} = \ \ x_1 {% endmath %} 同理可得 {% math %} x \ \ mod \ \ q \ \ = \ \ x_2 {% endmath %} </center>
+
+實例：
+
+![](/images/CRT_example.jpg)
