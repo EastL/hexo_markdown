@@ -11,7 +11,7 @@ Data Execution Prevention (DEP)：
 這種機制出現在是讓data段的資料不能被執行，code段不能寫入資料，如此攻擊者無法執行shell code。此機制預設是開的，要關掉的話compile時要加上-z execstack。
 
 StackGuard：
-compiler會在return address之前加一段檢查碼，最後要ret時會去檢查剛剛加的檢查碼有沒有被改過，有的話就跳出警示。以下列程式為例：
+compiler會在return address之前加一段檢查碼，最後要ret時會去檢查剛剛加的檢查碼有沒有被改過，有的話就跳出警示。以下列程式為例(引用[ptt](https://www.ptt.cc/bbs/C_and_CPP/M.1367803345.A.2AC.html))：
 
 {% codeblock %}
 #include <stdio.h>
