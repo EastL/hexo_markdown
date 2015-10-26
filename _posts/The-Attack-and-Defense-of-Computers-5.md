@@ -80,3 +80,28 @@ ret
 
 <h2> ASLR on Linux </h2>
 在2005年ASLR正式用在linux kernel 2.6.12，微軟在2007年也引進他們的kernel，不過當初開發ASLR是給linux用的，因此微軟的ASLR有時後效果並沒有那麼好。
+雖然每個process都會有ASLR，但並不是每個記憶體區塊被隨機載入時都能執行。而如果要在code段實施隨機載入，則在編譯程式碼時要開啟Position Independent Executable(PIE)，library段則是一開始compile時就幫你開啟PIE了，所以library段都會是隨機載入，gcc開啟PIE的方法為加參數"-fPIE -pie"即可。下列程式是印出EIP位址：
+
+{% codeblock %}
+#include <stdlib.h>
+#include <stdio.h>
+
+void* getEIP () {
+    return __builtin_return_address(0)-0x5;
+};
+
+int main(int argc, char** argv){
+    printf("EIP located at: %p\n",getEIP());
+    return 0;
+}
+{% endcodeblock %}
+
+這邊我compile時沒有開啟PIE，因此EIP位址是不會變的，但是library是隨機載入：
+
+![](/images/nopie_eip.jpg)
+
+接下來我開啟PIE，可以看到EIP位址是被隨機載入記憶體當中：
+
+![](/images/pie_eip.jpg)
+
+
