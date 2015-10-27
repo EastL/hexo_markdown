@@ -120,3 +120,44 @@ DEFINE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page) = { .gdt = {
      __attribute__((packed));
     {% endcodeblock %}
 
+<h3> Task State Segment </h3>
+Intel x86有提供Task State Segment(TSS)，當process要切換到另一個process時，必須把目前的暫存器的值存起來，這時可以將這些值存在Task State Segment。而在linux kernel每個processor只會有一個TSS，要呼叫時用TR selector選擇該processor的GDT裡的TSS descriptor，再從descriptor裡面的資訊找到segment：
+
+![](/images/tss.jpg)
+
+TSS架構：
+
+![](/images/tss_struct.jpg)
+
+接下來介紹兩種在linux kernel會看到但不常見的語法：
+*   typeof Operator 
+    通常typeof是來看被宣告的變數是什麼型態，由於linux kernel的code非常長，要用某個變數時時常不曉得他在哪邊被宣告的，於是我們就直接用typeof來看遍數為什麼型態，甚至能用來宣告變數。
+    {% codeblock %}
+    int e;
+    __typeof__(e + 1) j;  /* the same as declaring int j; */ 
+    {% endcodeblock %}
+    上面的j被宣告為與e相同型態。
+
+*   Comma Expressions
+    在C語言裡所有的敘述都會有回傳值，Comma Expressions會由左邊先計算，回傳值為最右邊。考慮下列程式：
+    {% codeblock %}
+    r = (a, b, ..., c);
+    {% endcodeblock %}
+    則計算過程為:a;b;...;r = c
+
+<h2> Paging Unit </h2>
+之前講到x86的位址轉換，會先由logical address經由segment unit轉為linear address，之後再轉成memory可以用的physical address，從linear address轉為physical address過程就是paging unit。下圖為page unit示意圖：
+
+![圖一](/images/page_unit.jpg)
+
+linear address會被切成3段，結構如下：
+
+![](/images/linearaddress_struct.jpg)
+
+最左邊10個bit是查directory用，中間的10個bit是查page table用，最後的12bit則是offset。page的概念是一堆linear address的集合，每一個page大小為固定；page table裡面每一個entry就對應到一個page；page directory裡面的每一個entry就對應到一個page table。page table(這邊指的是圖一中page table以及page directory，老師投影片中講的小寫page table就是在這邊用到，因為常常把table跟directory統稱為page table)固定有1024個entry，每個entry為4 byte，所以一個page table大小為4KB。
+
+在電腦剛開機時，processor進入real mode，此時paging的機制沒有開啟，在進到protected時，必須把cr0暫存器的PG flag設定為1才會開啟page unit。
+
+![](/images/page_cr0.jpg)
+
+當PG=0時，processor會直接把linear address當做physical address送出去。
