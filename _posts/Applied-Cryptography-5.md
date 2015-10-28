@@ -4,7 +4,15 @@ tags: Applied Cryptography
 ---
 來源：[chapter 3(23~32)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-3%20Number%20Theory.pdf)，[Number Theory II (3 ~ 4)](http://web.math.isu.edu.tw/yeh/2013Fall/GE/Lectures/L5/L5.pdf)
 
-在上一次的尤拉函數中，我們推得了費瑪理論的通式{% math %} a^{ \phi (n) } \ \ mod \ \ n \ \ = \ \ 1 \ \ if \ \ gcd(a,n)=1 {% endmath %}，這個式子對於餘數系統的乘法反元素非常有幫助，以上面例子來說，a在餘數系統中的乘法反元素就是{% math %} a^{ \phi (n) - 1} {% endmath %}，但如果考慮到計算量的話我們會想讓a的指數越小越好，因此在n=pq, p、q都是質數情況下，我們可以將{% math %} a^{ \phi (n) } \ \ mod \ \ n \ \ = \ \ 1 {% endmath %} 改成{% math %} a^{ lcm(p-1,q-1) } \ \ mod \ \ n \ \ = \ \ 1 {% endmath %}。(關於此式子小弟還沒想通，之後再補上證明)
+在上一次的尤拉函數中，我們推得了費瑪理論的通式{% math %} a^{ \phi (n) } \ \ mod \ \ n \ \ = \ \ 1 \ \ if \ \ gcd(a,n)=1 {% endmath %}，這個式子對於餘數系統的乘法反元素非常有幫助，以上面例子來說，a在餘數系統中的乘法反元素就是{% math %} a^{ \phi (n) - 1} {% endmath %}，但如果考慮到計算量的話我們會想讓a的指數越小越好，因此在n=pq, p、q都是質數情況下，我們可以將{% math %} a^{ \phi (n) } \ \ mod \ \ n \ \ = \ \ 1 {% endmath %} 改成{% math %} a^{ lcm(p-1,q-1) } \ \ mod \ \ n \ \ = \ \ 1 {% endmath %}。
+
+在證明之前先講會用到的理論，當x mod A = 1且x mod B = 1，則x mod AB = 1。
+
+再來我們看一下費瑪定理：
+<center> {% math %} a^{p-1} \ \ mod \ \ p \ \ = \ \ 1 {% endmath %} </center>
+<center> {% math %} a^{q-1} \ \ mod \ \ q \ \ = \ \ 1 {% endmath %} </center>
+
+故{% math %} a^{(p-1)k} \ \ mod \ \ p \ \ = \ \ 1 {% endmath %}，以p-1為周期到達p-1的倍數mod p後又會等於1。因此我們可以找到lcm(p-1, q-1)，使得{% math %} a^{ lcm(p-1,q-1) } \ \ mod \ \ p \ \ = \ \ 1 {% endmath %} 且{% math %} a^{ lcm(p-1,q-1) } \ \ mod \ \ q \ \ = \ \ 1 {% endmath %}，再利用剛剛的理論得到{% math %} a^{ lcm(p-1,q-1) } \ \ mod \ \ n \ \ = \ \ 1 {% endmath %}。
 
 有了餘數系統的乘法反元素後，RSA將他應用在加密演算法上：
 
