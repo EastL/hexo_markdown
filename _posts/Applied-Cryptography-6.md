@@ -107,6 +107,33 @@ J( \frac{a_1*a_2}{n}) \ \ = \ \ J( \frac{a_1}{n}) \ \ \times \ \ J( \frac{a_2}{n
     (choose \ \ the \ \ smallest) 
     {% endmath %} 
     </center>
-注意這邊ID開根號完會有4個密碼，因為是在mod合成數底下造成的，mod一個質數開根號後會有兩個根，我們設定的n擁有兩個質數，因此密碼會有四個根，至於為什麼要選擇最小的則是因為攻擊者如果拿到這四個根，他就有辦法解出p跟q，詳細狀況待會說明，先來看看這四個根是什麼狀況。
+注意這邊ID開根號完會有4個密碼，因為是在mod合成數底下造成的，mod一個質數開根號後會有兩個根，我們設定的n擁有兩個質數，因此密碼會有四個根，至於為什麼要選擇最小的則是因為攻擊者如果拿到這四個根，他就有辦法解出p跟q，詳細狀況待會說明，先來看看這四個根如何解。
+要解合成數的開根號當然是運用中國餘數定理，將原本mod n底下拆成mod p跟mod q，分別計算出根號值之後再merge回來。下圖為示意圖：
 
+![](/images/mix_root.jpg)
+
+$a_p$開根號後假設值為$S_1$, p-$S_1$，$a_q$開根號後為$S_2$, q-$S_2$，而T在mod n底下的四個值假設為x, n-x, y, n-y，則x會是$S_1$跟$S_2$ 利用中國餘數定理merge而成，n-x會是 p-$S_1$ 跟 q-$S_2$ merge而成，同理y會是$S_1$跟 q-$S_2$ merge，n-y是$S_2$跟 p-$S_1$ merge。簡單來說就是兩兩成對，四個根會有兩對pair。基本上到目前為止整個帳密系統輪廓都描繪出來了，就還差一個細節，記得剛剛講說利用中國餘數定理將合成數拆成質數，然後就能計算出開根號，那mod 質數底下要怎麼找開根號的兩個根呢？在1891年Alberto Tonelli發展了一個演算法解決了這問題，但此演算法效能不佳，在1973年[Daniel Shanks](https://en.wikipedia.org/wiki/Daniel_Shanks)發展了[Tonelli–Shanks algorithm](https://en.wikipedia.org/wiki/Tonelli%E2%80%93Shanks_algorithm)，也就是接下來要講的演算法。
+<h4> Tonelli–Shanks algorithm </h4>
+此演算法要解決的問題如下：p為質數，n為$QR_p$，找出x使得
+<center> {% math %} x^2 \ \ \equiv \ \ n \ \ (mod \ \ p) {% endmath %} </center>
+其實[Joseph-Louis Lagrange](https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange)有找到當{% math %} p \ \ \equiv \ \ 3 \ \ (mod \ \ 4) {% endmath %}情況下，{% math %} x \ \ \equiv \ \ \pm n^{ \frac{p+1}{4}} {% endmath %} [from wiki](https://en.wikipedia.org/wiki/Quadratic_residue)，會說明這個特殊狀況是因為待會演算法裡面有這個...
+
+Algorithm:
+Input : p, n，p為odd prime，n為integer且$QR_p$
+Output : R, {% math %} R^2 \ \ \equiv \ \ n \ \ (mod \ \ p) {% endmath %}
+
+步驟一：將p-1所有2的因數除掉，除到最後為奇數Q，令S為2的個數：{% math %} p \ \ - \ \ 1 \ \ = \ \ Q \ \ * \ \ 2^S {% endmath %}，當S=1時return {% math %} \pm n^{ \frac{p-1}{4}} {% endmath %} (剛剛講的特殊狀況)  
+步驟二：選擇一個z使得z為$NQR_p$，並且令{% math %} c \ \ \equiv \ \ z^Q  \ \ (mod \ \ p){% endmath %}
+步驟三：令{% math %} R \ \ \equiv \ \ n^{ \frac{Q+1}{2}} \ \ (mod \ \ p), \ \ t \ \ \equiv \ \ n^Q, \ \ M \ \ = \ \ S {% endmath %}
+步驟四：Loop:
+*   if t $ \equiv $ 1 (mod p)，return R
+*   找到最小的i，0 < i < M，使得{% math %} t^{2^i} \ \ \equiv \ \ 1 \ \ (mod \ \ p) {% endmath %}
+*   {% math %} b \ \ \equiv \ \ c^{2M-i-1}, \ \ R \ \ \equiv \ \ bR, \ \ t \ \ \equiv \ \ tb^2\ \ (mod \ \ p) {% endmath %}, M = i
+
+證明：  
+其實只看演算法會看到霧煞煞，我們來整理一下：看一下步驟四的迴圈，當t=1時回傳R，因此我們可以知道R就是根號n，那跟t=1有什麼關係？由於我們設定{% math %} R \ \ \equiv \ \ n^{ \frac{Q+1}{2}} \ \ (mod \ \ p), \ \ t \ \ \equiv \ \     n^Q{% endmath %}，因此{% math %} R^2 \ \ \equiv \ \ nt \ \ (mod \ \ p) {% endmath %}，所以當t=1時R為n的平方根。那t什麼時候才會變成1呢？說明這個之前先補充一個預備知識：[order](https://en.wikipedia.org/wiki/Order_(group_theory))，給定{% math %} m \ \ \in \ \ N, \ \ a \ \ \in \ \ Z  {% endmath %}，滿足gcd(a,m)=1，若{% math %} n \ \ \in \ \ N {% endmath %}是最小正整數滿足{% math %} a^n \ \ \equiv \ \ 1 \ \ (mod \ \ m) {% endmath %}，則稱n為a在mod m底下的order，並以{% math %} ord_m(a) \ \ = \ \ n {% endmath %}表之。(參考[基礎數論](http://math.ntnu.edu.tw/~li/ent-html/))
+
+有了order概念後接著我們看步驟二的c，由於{% math %} c \ \ \equiv \ \ z^Q  \ \ (mod \ \ p){% endmath %}，因此{% math %} c^{2^S} \ \ \equiv \ \ (z^Q)^{2^S} \ \ \equiv \ \ z^{Q2^S} \ \ \equiv \ \ z^{p-1} \ \ \equiv \ \ 1 \ \ (mod \ \ p) {% endmath %}，此時還不確定$2^S$就是c的order，因此我們檢查$2^{S-1}$：{% math %} c^{2^{S-1}} \ \ \equiv \ \ z^{ \frac{p-1}{2}} \ \ -1 \ \ (mod \ \ p){% endmath %}，最後的等於-1是Legendre symbol，由此可知c的order為$2^S$。接下來是關鍵的t，雖然{% math %} t^{2^S} \ \ \equiv \ \ 1 \ \ (mod \ \ p) {% endmath %}，但由於c是利用z是NQR來讓他算出來結果是-1，t在這邊無法如法炮製，因此我們假設t的order為$2^{S'}$。接著我們為了讓下一回合保持{% math %} R^2 \ \ \equiv \ \ nt \ \ (mod \ \ p) {% endmath %}，在步驟四中設定了{% math %} b \ \ \equiv \ \ c^{2M-i-1}, \ \ R \ \ \equiv \ \ bR, \ \ t \ \ \equiv \ \ tb^2 \ \ (mod \ \ p) {% endmath %}，如此一來就可以看成{% math %} (bR)^2 \ \ \equiv \ \ n*b^2*t \ \ (mod \ \ p) {% endmath %}，b消掉的話就跟原式一樣。
+
+接著我們看一下c'，{% math %} (c')^{2^{S'}} \ \ \equiv \ \ c^{(2^{S-S'-1})^2 \ \ * \ \ 2^{S'}} \ \ \equiv \ \ c^{2^S} \ \ \equiv \ \ 1 {% endmath %}，這邊就可以了解S-S'-1的-1是為了消掉後面的平方，-S'是為了後來要讓$2^{S'}$消掉，而{% math %} (c')^{2^{S'-1}} \ \ \equiv \ \ c^{2^{S-1}} \ \ \equiv \ \ -1 \ \ (mod \ \ p) {% endmath %}，故c'的order為$2^{S'}$。由此可知下一輪的t'會有order S'' < S'，所以當最後的S''為0時，t就是1了，此時的R即為根號解。
 
