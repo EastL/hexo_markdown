@@ -116,7 +116,7 @@ $a_p$開根號後假設值為$S_1$, p-$S_1$，$a_q$開根號後為$S_2$, q-$S_2$
 <h4> Tonelli–Shanks algorithm </h4>
 此演算法要解決的問題如下：p為質數，n為$QR_p$，找出x使得
 <center> {% math %} x^2 \ \ \equiv \ \ n \ \ (mod \ \ p) {% endmath %} </center>
-其實[Joseph-Louis Lagrange](https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange)有找到當{% math %} p \ \ \equiv \ \ 3 \ \ (mod \ \ 4) {% endmath %}情況下，{% math %} x \ \ \equiv \ \ \pm n^{ \frac{p+1}{4}} {% endmath %} [from wiki](https://en.wikipedia.org/wiki/Quadratic_residue)，會說明這個特殊狀況是因為待會演算法裡面有這個...
+其實[Joseph-Louis Lagrange](https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange)有找到當{% math %} p \ \ \equiv \ \ 3 \ \ (mod \ \ 4) {% endmath %}情況下，{% math %} x \ \ \equiv \ \ \pm n^{ \frac{p+1}{4}} {% endmath %} ([from wiki](https://en.wikipedia.org/wiki/Quadratic_residue))，會說明這個特殊狀況是因為待會演算法裡面有這個...
 
 Algorithm:
 Input : p, n，p為odd prime，n為integer且$QR_p$
