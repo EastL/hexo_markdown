@@ -135,7 +135,7 @@ Output : R, {% math %} R^2 \ \ \equiv \ \ n \ \ (mod \ \ p) {% endmath %}
 
 接著我們看步驟二的c，由於{% math %} c \ \ \equiv \ \ z^Q  \ \ (mod \ \ p){% endmath %}，因此{% math %} c^{2^S} \ \ \equiv \ \ (z^Q)^{2^S} \ \ \equiv \ \ z^{Q2^S} \ \ \equiv \ \ z^{p-1} \ \ \equiv \ \ 1 \ \ (mod \ \ p) {% endmath %}，此時還不確定$2^S$就是c的order，因此我們檢查$2^{S-1}$：{% math %} c^{2^{S-1}} \ \ \equiv \ \ z^{ \frac{p-1}{2}} \ \ \equiv \ \ -1 \ \ (mod \ \ p){% endmath %}，最後的等於-1是Legendre symbol，由此可知c的order為$2^S$。
 
-接下來是關鍵的t，雖然{% math %} t^{2^S} \ \ \equiv \ \ 1 \ \ (mod \ \ p) {% endmath %}，但由於c是利用z是NQR來讓他算出來結果是-1，t在這邊無法如法炮製，因此我們假設t的order為$2^{S'}$。接著我們為了讓下一回合保持{% math %} R^2 \ \ \equiv \ \ nt \ \ (mod \ \ p) {% endmath %}，在步驟四中設定了{% math %} b \ \ \equiv \ \ c^{2M-i-1}, \ \ R \ \ \equiv \ \ bR, \ \ t \ \ \equiv \ \ tb^2 \ \ (mod \ \ p) {% endmath %}，如此一來就可以看成{% math %} (bR)^2 \ \ \equiv \ \ n*b^2*t \ \ (mod \ \ p) {% endmath %}，$b^2$消掉的話就跟原式一樣。
+接下來是關鍵的t，雖然{% math %} t^{2^S} \ \ \equiv \ \ 1 \ \ (mod \ \ p) {% endmath %}，但由於c是利用z是NQR來讓{% math %} c^{2^{S-1}} {% endmath %}算出來結果是-1，t在這邊無法如法炮製，因此我們假設t的order為$2^{S'}$。接著我們為了讓下一回合保持{% math %} R^2 \ \ \equiv \ \ nt \ \ (mod \ \ p) {% endmath %}，在步驟四中設定了{% math %} b \ \ \equiv \ \ c^{2M-i-1}, \ \ R \ \ \equiv \ \ bR, \ \ t \ \ \equiv \ \ tb^2 \ \ (mod \ \ p) {% endmath %}，如此一來就可以看成{% math %} (bR)^2 \ \ \equiv \ \ n*b^2*t \ \ (mod \ \ p) {% endmath %}，$b^2$消掉的話就跟原式一樣。
 
 接著我們看一下c'，{% math %} (c')^{2^{S'}} \ \ \equiv \ \ b^{2^{S'} \ \ * \ \ 2} \ \ \equiv \ \ b^{2^{S'+1}} \ \ \equiv \ \ c^{2^{S-S'-1+S'+1}}  \ \ \equiv \ \ c^{2^S} \ \ \equiv \ \ 1 \ \ (mod \ \ p){% endmath %}，這邊就可以了解S-S'-1的-1是為了消掉後面的平方，-S'是為了後來要讓$2^{S'}$消掉，而{% math %} (c')^{2^{S'-1}} \ \ \equiv \ \ c^{2^{S-1}} \ \ \equiv \ \ -1 \ \ (mod \ \ p) {% endmath %}，故c'的order為$2^{S'}$。
 
