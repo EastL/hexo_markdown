@@ -141,3 +141,48 @@ Output : R, {% math %} R^2 \ \ \equiv \ \ n \ \ (mod \ \ p) {% endmath %}
 
 這邊先來整理一下思緒，我們剛剛假定t的order為$2^{S'}$，然後推導到後來c'居然order也一樣是$2^{S'}$，由此可知下一輪的t'跟c"會有S" < S'，而他們的order為$2^{S"}$。所以當S"為0時，$2^{S"}$ = 1，也就是說{% math %} t^{2^{S"}} \ \ \equiv \ \ t^1 \ \  \equiv \ \ 1 \ \ (mod \ \ p) {% endmath %}，我們最想看到的t=1終於出現了，如果S"不為0沒關係繼續下一輪，因為S只會越來越小，所以當最後t找不到order時，t的次方選項就剩下0可以選了，此時的R即為根號解。
 
+![](/images/QR_NQR_system.jpg)
+
+上圖為系統登入流程，使用者輸入帳號密碼後，確認帳號存在查帳密那張表，密碼部分紀錄的是(i,j)，再去找k來跟ID相乘，最後結果再與密碼平方來做比對，便能得知帳密是否正確了。接著來說明剛剛算出的四個根當中要選固定的給使用者，以剛剛四個根x, n-x, y, n-y為例，如果攻擊者拿到x或n-x與y或n-y的話，攻擊者就有1/2的機率計算出p跟q了。
+
+假設ID在mod p底下算出來的答案是$S_1$, p-$S_1$，在mod q底下算出來的答案是$S_2$, q-$S_2$，利用中國餘數定理將$S_1$, $S_2$計算出密碼得到x，$S_1$, q-$S_2$計算出密碼得到y，而攻擊者拿到的密碼為x跟y，則：
+<center>
+gcd(x+y, n) = q
+gcd(x-y, n) = p
+</center>
+計算出最大公因數居然就能得到pq，這邊分析一下x跟y。
+<center>
+{% math %}
+x \ \ \equiv \ \ S_1 \ \ (mod \ \ p)  \\
+x \ \ \equiv \ \ S_2 \ \ (mod \ \ q)  \\
+y \ \ \equiv \ \ S_1 \ \ (mod \ \ p)  \\
+y \ \ \equiv \ \ -S_2 \ \ (mod \ \ q) \\
+therefore  \\
+x+y \ \ \equiv \ \ 0 \ \ (mod \ \ q)  \\
+x-y \ \ \equiv \ \ 0 \ \ (mod \ \ p)
+{% endmath %}
+</center>
+所以只要四個根都知道的話就能拿不同pair的密碼來破解pq了。
+
+接著我們看另外一種情境：假設帳號是使用者可以決定，而且儲存帳密的表被攻擊者拿到而且有寫入的權限，那麼攻擊者就能夠自己設定密碼，將密碼平方後mod n，此數即為帳號，之後在將表格的密碼欄位寫為(1,1)，此時系統在查要與帳號相乘的數就會是1，因此攻擊者就可以自行創造帳號與密碼了。
+
+上述情境是在ID可易讓使用者選擇，而且帳密的表可以被寫入，那麼如果儲存帳密的表不能寫的情況，ID還是可以讓使用者自行選擇，還有辦法攻擊嗎？這題老師明講了是其中考題。
+
+<hr>
+
+<h2> Rabin Encryption V.S. RSA </h2>
+QR跟NQR的概念應用在Rabin Encryption，加密時將明文平方變為密文，解密時開根號回來為明文，安全性一樣是落在將合成數拆成兩質數相乘。
+
+![](/images/Rabin_VS_RSA.jpg)
+
+上圖是兩個演算法加解密比較，過程看起來蠻類似的，如果要在比較小運算能力比較差的機器上做加密的話，可以選擇Rabin，因為他加密只需要做平方跟mod；而數位簽章的話剛好跟加解密反過來，因此如果要驗證簽章是否正確的話Rabin適合在計算能力較差的device上。
+
+<hr>
+
+<h2> Generator </h2>
+定義：If p is a prime and g is less than is less than p, then g is a generator modulo p if for all 1 ≤ m ≤ p-1, {% math %} \exists \ \ a \ \ \in \ \ g^a \ \ \equiv \ \ m \ \ (mod \ \ p) {% endmath %}
+
+簡單來說就是把generator當底數，他的次方在小於p的所有指數mod p後可以將所有小於p的數創造出來。下面就是mod 11底下以2為generator：
+
+![](/images/generator_2.jpg)
+
