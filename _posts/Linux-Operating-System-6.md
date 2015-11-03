@@ -54,3 +54,9 @@ D：Dirty flag，此flag與Accessed flag搭配使用，這邊是給OS的Enhanced
 
 在extend paging下linear address就只切成兩段，將原本paging unit的page table 10 bit與offset 12bit合併為offset 22bit，所以一個page frame會有$2^{22}$個offset相當於4MB，Directory一樣是10個bit。
 
+<h2> The Physical Address Extension (PAE) </h2>
+在Pentium Pro之後的CPU有36條address lines，因此可以有$2^{36}$的記憶體空間，也就是64GB，不過如果要使用到64GB的記憶體位置的話，需要將cr4的PAE bit開啟。
+
+![](/images/cr4_pae.jpg)
+
+那麼這邊衍生一個問題，CPU裡的所有暫存器都還是32位元，那要如何執行到64GB的RAM呢？因此有了新的paging機制。如果我們將64GB的記憶體以4KB為單位，那麼總共會有$2^{24}$個page frame，
