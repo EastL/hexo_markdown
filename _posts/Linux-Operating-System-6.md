@@ -59,4 +59,14 @@ D：Dirty flag，此flag與Accessed flag搭配使用，這邊是給OS的Enhanced
 
 ![](/images/cr4_pae.jpg)
 
-那麼這邊衍生一個問題，CPU裡的所有暫存器都還是32位元，那要如何執行到64GB的RAM呢？因此有了新的paging機制。如果我們將64GB的記憶體以4KB為單位，那麼總共會有$2^{24}$個page frame，
+那麼這邊衍生一個問題，CPU裡的所有暫存器都還是32位元，那要如何執行到64GB的RAM呢？因此有了新的paging機制。如果我們將64GB的記憶體以4KB為單位，那麼總共會有$2^{24}$個page frame，接著我們看PAE的機制：
+
+![](/images/PAE.jpg)
+
+與原本paging的差別多了一個Page Directory Pointer Table (PDPT)，PDPT總共有4個entry，每個entry有8個byte。由於原本的entry只有4byte，紀錄位址的地方只有20個bit，這邊要記錄的位址須要36-12=24個bit(page frame size = 4KB)，因此直接擴大兩倍每個entry為8byte。而後面的page directory與page table都是512個entry，每個entry一樣為8byte。由此可知在linear address的切割方式為：前兩個bit給PDPT，接下來的9個bit給page directory，再來9個給page table，最後的12bit為offset。
+
+回到剛剛問題，那暫存器只有32個bit要如何存取到64GB的記憶體？由於我們這邊每個entry增為8byte，可以記錄的是整個64GB的記憶體，因此我就能夠存取64GB當中的任意位置，如果用的是以前的paging，那麼每次entry只能記錄20bit，因此就只能夠存取到最前面的4GB了。雖然entry紀錄位置不夠的問題解決了，但一開始的CR3要去指向PDPT要怎麼辦呢？由於CR3只有32bit，然後真正可以紀錄PDPT的base只有27bit，如下圖：
+
+![](/images/cr3_register.jpg)
+
+為了解決此問題，首先，PDPT就故定放在前4GB的位置，這時代表著PDPT的位址前4個bit一定為0；再來，將PDPT故定放在32的倍數，如此一來後面的5個bit又都是0，因此只需要記錄中間的36-4-5=27個bit就足夠了，之後拿出來前四個bit跟後五個bit都塞0就是PDPT的位置。
