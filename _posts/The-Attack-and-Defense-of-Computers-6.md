@@ -5,7 +5,7 @@ tags: The Attack and Defense of Computers
 來源：[Drive-by Download(83 ~ 106)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/2_BOA.ppt)，[Botnet(1 ~ 10)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/2_1_Botnet.ppt)
 
 <h2> Heap Spray </h2>
-Heap spray主要概念就是在受害程式的heap段注入大量的shellcode以及nop，這項技術是由SkyLined所提出，他利用heap spray打下了IE的許多漏洞，例如[MS04-040](http://www.microsoft.com/technet/security/Bulletin/MS04-040.mspx)以及[MS05-020](http://www.microsoft.com/technet/security/Bulletin/MS05-020.mspx)。下圖為Heap spray概念圖：
+Heap spray主要概念就是在受害程式的heap段注入大量的shellcode以及nop，這項技術是由SkyLined所提出，他利用heap spray打下了IE的許多漏洞，例如[MS04-040](http://www.microsoft.com/technet/security/Bulletin/MS04-040.mspx)以及[MS05-020](http://www.microsoft.com/technet/security/Bulletin/MS05-020.mspx)。下圖為Heap spray概念圖(來源[Software Vulnerability Exploitation Blog](http://sf-freedom.blogspot.tw/2006/06/heap-spraying-introduction.html))：
 
 ![](/images/heap_spray.jpg)
 
@@ -31,6 +31,7 @@ Heap spray主要概念就是在受害程式的heap段注入大量的shellcode以
 {% endcodeblock %}
 
 上面可以看到注入的東西為shellcode以及NOP，整個注入的大小大概是262MB。因此ASLR在這邊對攻擊者而言影響不大。(參考[Nozzle: A Defense Against Heap-spraying Code Injection Attacks](http://research.microsoft.com/pubs/76528/tr-2008-176.pdf))     
+
 而現在我們常用的影像檔案也可以拿來當作heap spray攻擊媒介，由於讀取影像檔的程式是動態讀取影像大小，因為影像檔大小無法預測，故我們可以依照讀取影像程式的寫法來塞heap spray到影像檔當中，這樣在受害者開起影像時就能將程式碼注入到開起影像的程式的heap段了。
 
 <h2> Memory Corruption Exploit </h2>
@@ -48,4 +49,16 @@ Heap spray主要概念就是在受害程式的heap段注入大量的shellcode以
 上圖可以看到我們利用a[100]來蓋掉vptr，因此程式流程導向我們的table最後到達heap spray。
 
 <h2> Drive-by Download Attacks  </h2>
+現在惡意程式樣貌非常多元，但大致可分為感染跟攻擊這兩種階段， Drive-by Download為目前非常流行的感染途徑，他可能利用網頁漏洞、email之類的讓使用者感染攻擊者的程式碼，當使用者瀏覽網頁或者觀看html格式的信件時都可能中毒。在感染過程中，大多攻擊者都不想讓受害者發現自己的攻擊碼，因此隱藏的越隱蔽越好，下圖為Drive-by Download Attacks示意圖：
+
+![](/images/Drive-by_download_attack.jpg)
+
+攻擊者在正常網站上加入了自己的攻擊程式碼，讓受害者在瀏覽網頁時會自動導向攻擊者的網站，圖中可以看到在正常網站裡安插了iframe，長寬為0，因此受害者會在不知不覺中向攻擊者網站拿了惡意的html。
+
+![](/images/Drive-by_download_attack2.jpg)
+
+![](/images/Drive-by_download_attack3.jpg)
+
+接著這個惡意的html裡面有16進位執行碼，他會透過受害者的瀏覽器向攻擊者網站下載惡意執行檔存到硬碟當中。在這過程當中攻擊者將受害者導向自己的網站就是為了不被原來網站發現，如果要直接在最剛開始的網頁中下載惡意程式也是可以，不過相對的所需要的程式碼就比較長，易被發現。
+
 
