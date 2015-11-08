@@ -121,6 +121,34 @@ Decryption:
     = \ \ m
 {% endmath %} 
 </center>
+
 太神奇了，在m跟n不互質狀況下居然解的回來，這邊是因為雖然在原本大的世界n是不互質的，但是到了小世界p跟q之後一個變成0一個依然是互質，所以可以看到在q的世界一樣是尤拉定理讓ed消掉。
+
+接著我們來談RSA的 Reblocking 問題：當A要簽暑並加密文件再傳給B，那麼A必須先用自己的private key做簽署，之後再用B的public key加密。但如果B所選的模數比A小的時後，此時便會發生Reblocking，下面例子是擷取自[Handbook of Applied Cryptography](http://cacr.uwaterloo.ca/hac/about/chap11.pdf)：
+
+![](/images/reblocking_pro.jpg)
+
+可以看到最後解回m時與原本的不同。要解決此問題可以先看模數大小，模數較小的一方先做，這樣就不會造成reblocking，但基於安全性的考量，如果先進行加密在進行簽署，簽署就不會被加密所保護，攻擊者可能會從此處下手，因此另一種方式是規定兩種key，以t bit來劃分界線，小於此界線的就拿來做簽章，大於此界線的拿來做加解密。
+
+而RSA的加密方式在加密訊息時，會先將訊息切成故定大小再進行簽署，若此時攻擊者調換了不同的block接收方並不會曉得，因此我們會先將訊息經由hash function得到digest，再對這個digest進行簽署，如此一來接收方接收到訊息時，先將訊息經過hash function得到digest，再比對看看這個digest值與傳送方送來的值是否一樣便能得知傳送過程中是否有被竄改過。
+
+接著我們來看比RSA更早之前秘密組織就已經有的類似RSA的演算法：
+<center>
+n = pq
+public key : n, private key : p', q' 
+({% math %} p' \ \ \times \ \ p \ \ \equiv \ \ 1 \ \ (mod \ \ \phi (n)), \ \  q' \ \ \times \ \ q \ \ \equiv \ \ 1 \ \ (mod \ \ \phi (n)) {% endmath %})
+</center>
+Encryption: {% math %} C \ \ = \ \ m^n \ \ mod \ \ n {% endmath %}
+Decryption: {% math %} m \ \ = \ \ C^{p' q'} \ \ mod \ \ n {% endmath %}
+
+這邊跟RSA非常相像，找了p跟q的乘法反元素來消掉n，而令人驚訝的是，RSA加速的方法(中國餘數定理)是在RSA提出後幾年才被提出來了，而這個人居然連加速的方法也想到了：
+
+n = pq, gcd(p, q-1) = 1, gcd(q, p-1) = 1
+public key : n, private key : p', q'
+({% math %} p' \ \ \times \ \ p \ \ \equiv \ \ 1 \ \ (mod \ \ q-1), \ \ q' \ \ \times \ \ q \ \ \equiv \ \ 1 \ \ (mod \ \ p-1) {% endmath %})
+Encryption: {% math %} C_p \ \ \equiv \ \ (m_{p})^{q} \ \ (mod \ \ p) \ \ ,  \ \ C_q \ \ \equiv \ \ (m_{q})^{p} \ \ (mod \ \ q) {% endmath %}
+Decryption: {% math %} m_p \ \ \equiv \ \ (C_{p})^{q'} \ \ (mod \ \ p), \ \ m_q \ \ \equiv \ \ (C_{q})^{p'} \ \ (mod \ \ q) {% endmath %}
+
+最後再利用中國餘數定理merge回m就完成了。
 
 
