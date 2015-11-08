@@ -42,4 +42,85 @@ Divisor sum:
 
 有了這個演算法後我們就能找出質數p的generator了～但是實際上並沒有這麼順利，在現實生活中p是個很大的質數，所以要將p-1做質因數分解是很難的，那我們剛剛不就白解了嗎....實際運用上通常都是設定p-1等於兩倍的令一個質數，這樣質因數分解就是2跟剛剛設定的質數，之後會講到如何製造質數。
 
+<hr>
+
+<h2> Introduction to Public-Key Cryptography </h2>
+終於要進到近代密碼系統了，近代密碼系統主要精神就是將資訊透過現階段的難題進行編碼，但這難題可以透過知道某些key information進而變為簡單的題目。下面將舉一個Knapsack problem來當例子：
+
+<h4> Knapsack problem </h4>
+聖誕節快到了，聖誕老公公招集了一群小朋友到一間禮物房，裡面擺滿了各式各樣的禮物。在這間房間裡的每一個禮物上面都貼著一個標籤，上面寫著該禮物的重量，每個禮物重量都不相同。此時聖誕老公公拿了一個大袋子裡面裝滿了東西，他說：「這裡面都是你們在這間房間看的到的禮物，而且裡面並不會有重複一樣的禮物。但我只會告訴你們這個大袋子裡面裝的東西的總重量，如果有哪個小朋友知道這裡面總共有哪些禮物，那你就能得到這一袋」。
+
+突然覺得這個聖誕老公公有點壞心...其實這就是一個Knapsack problem，當然他還有其他很多種變型，這邊我們要用的是：知道總重量求個別物品。我們可以設計一個長度為t的亂數陣列，在這陣列當中取m個的總和，這時如果要將這m個總合求原本是哪些亂數就變成了Knapsack problem。那Knapsack problem要如何運用到加密呢？我們可以設計取m個的總和的取法就是message，那他們的總和就是密文。
+
+given {% math %} (r_t, \ \ r_{t-1}, \ \ ... \ \ , \ \ r_1, \ \ r_0) {% endmath %} and {% math %} (m_t, \ \ m_{t-1}, \ \ ... \ \ , \ \ m_1, \ \ m_0) {% endmath %} r就是剛剛講的亂數陣列，m就是取法，m為bit 陣列，$m_n$為1代表$r_n$要選，為0代表$r_n$不選。
+
+因此 {% math %} C \ \ = \ \ \sum_{i=0}^{t} r_i \ \ \times \ \ m_i {% endmath %} C為密文，C非常容易計算出來，但是要從C推回m是個難題。但如果從C推回m為難題對於解密方不就也是難題了？因此我們必須設計一個key information來讓解密方知道key之後就不是難題：設計 {% math %} r_i \ \ = \ \ 2^i \ \ \times \ \ K \ \ mod \ \ p \ \ (where \ \ p \ \ \geq \ \ 2^{t+1} ){% endmath %}，K就是key，對於知道key的人來說，這個亂數陣列的組合就會變成將C從十進位轉為二進位表示，因為亂數都是2的次方，那不知道K的人這問題依舊是一個難題。
+
+而利用Knapsack problem來製造一個function使得計算總合容易，但從總合推算回去很難，這種function稱為one-way function。但我們可以利用一個key來讓此問題變簡單，這就好像多了一道暗門一樣，只有知道內線消息(key)的人才有辦法通過。
+
+![](/images/one-way_tdoor.jpg)
+
+<hr>
+
+近代密碼系統就是建立在理論上解的出來，但計算上所耗費的時間成本會讓人不想去解這密碼，因此之後的量子電腦出現後很多的難題對他來說都變成簡單的題目，而加解密又是建立在這難題之上，所以量子電腦出現後可能密碼世界會再被改寫也不一定...
+
+而最早被公開的近代密碼系統莫過於Diffie-Hellman Public Key-Exchange了，在[第一章節](http://eastl.github.io/2015/09/28/Applied-Cryptography-1/)有講過其細節，Diffie-Hellman利用了離散對數難題來進行金鑰交換。雖然這演算法是安全的，但無法抵禦man-in-the-middle attack：
+
+首先先來看正常情況，Alice將A,g,p傳給Bob，Bob將B傳給Alice，雙方計算完後得到共同的key K(細節請看之前的[Applied-Cryptography-1](http://eastl.github.io/2015/09/28/Applied-Cryptography-1/))，如下圖(來源：[stackoverflow](http://stackoverflow.com/questions/10471009/how-does-the-man-in-the-middle-attack-work-in-diffie-hellman))：
+
+![](/images/DH_Mitm.jpg)
+
+接著我們看man in the middle attack，顧名思義就是中間有一個人在攻擊，當Alice要傳給Bob資訊時，中間的攻擊者將資訊攔截下來，並且自己位裝成Bob計算出$B_1$給Alice；同時再偽裝成Alice傳$B_2$給Bob，這時攻擊者就擁有了跟Alice通訊的$K_1$與跟Bob通訊用的$K_2$，如下圖：
+
+![](/images/DH_Mitm2.jpg)
+
+接著我們用學過數論的角度來看RSA，相信RSA演算法大家都蠻熟的了，這邊直接看加解密過程：
+
+Encryption:
+<center> {% math %} C \ \ = \ \ m^e \ \ mod \ \ n {% endmath %} </center>
+Decryption:
+<center> 
+{% math %} 
+    m \ \ \equiv \ \ C^d  \\ 
+    \equiv \ \ m^{ed} \ \ (mod \ \ n) \\
+    \equiv \ \ m^{1+k \phi (n)} \ \ (mod \ \ n) \\
+    \equiv \ \ m \\
+    (where \ \ e \ \ \times \ \ d \ \ \equiv \ \  1 (mod \ \ \phi (n)))
+{% endmath %} 
+</center>
+
+這邊可以看到用到尤拉的式子使{% math %} m^{ \phi (n)}  {% endmath %}在mod n底下為1。那這個式子需要建立在m跟n互質的情況下才成立，那這時候就出現問題了，我的message一定會跟n互質嗎？我們來看看m跟n不互質的機率是多少。在mod n底下總共有n-1個數，其中有φ(n)個數與n互質，而在RSA演算法中n為兩個很大的質數相乘，令n = pq，則m跟n不互質機率為：
+
+<center> {% math %} m \ \ = \ \ \frac{n-1- \phi (n)}{n-1} \ \ = \ \ \frac{pq-1-(p-1)(q-1)}{pq-1}  \ \ = \ \ \frac{p+q-2}{pq-1} {% endmath %} </center>
+假設pq都是512bit的質數，則：
+<center> {% math %} \frac{p+q-2}{pq-1} \ \ \approx \ \ \frac{1}{2^{511}} {% endmath %} </center>
+這個數應該能夠看成趨近於零了吧....那如果就是這麼剛好遇到跟n不互質的數那就完了嗎？這邊RSA非常神奇的還是能夠解的回來。如果m跟n不互質，那m一定是p的倍數或是q的倍數，而且不可能同時是p跟q的倍數，因此假設m = ap，且gcd(a,q) = 1(因為q為質數且a不可能為q的倍數)，我們利用中國餘數定理將m分散到p跟q兩個小世界裡：
+<center>
+{% math %}
+    m \ \ mod \ \ p \ \ = \ \ 0 \\
+    m \ \ mod \ \ q \ \ = \ \ ap \ \ mod \ \ q
+{% endmath %}
+</center>
+
+接著進行加密： {% math %} C \ \ = \ \ m^e \ \ mod \ \ n {% endmath %}
+<center>
+{% math %}
+    C \ \ \rightarrow \ \ (0^e \ \ mod \ \ p, \ \ (ap)^e \ \ mod \ \ q)
+{% endmath %}
+</center>
+
+解密：
+
+<center> 
+{% math %} 
+    C^d \ \ mod \ \ n \rightarrow \ \ (0^e \ \ mod \ \ p, \ \ (ap)^{ed} \ \ mod \ \ q) \\
+    = \ \ (0, \ \ (ap)^{1+k \phi (n)} \ \ mod \ \ q) \\
+    = \ \ (0, \ \ (ap)^{1+k(p-1)(q-1)} \ \ mod \ \ q) \\
+    = \ \ (0, \ \ (ap) \ \ \times \ \ [(ap)^{(q-1)}]^{k(p-1)} \ \ mod \ \ q)  \\
+    = \ \ (0, \ \ (ap) \ \ mod \ \ q) \\
+    = \ \ m
+{% endmath %} 
+</center>
+太神奇了，在m跟n不互質狀況下居然解的回來，這邊是因為雖然在原本大的世界n是不互質的，但是到了小世界p跟q之後一個變成0一個依然是互質，所以可以看到在q的世界一樣是尤拉定理讓ed消掉。
+
 
