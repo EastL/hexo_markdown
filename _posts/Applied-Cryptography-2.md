@@ -72,7 +72,7 @@ The max period of LFSR
 當一串數為亂數時，代表此串亂數不可預測，既然不可預測那這串數就沒有週期，換句話說這串數的週期為無限大。所以這邊要討論如何讓LFSR的週期最大。設定{% math %}b_n{% endmath %}為二進位數，當第n個bit要拉下來作xor時，{% math %}b_n{% endmath %}為1，反之不拉下來時{% math %}b_n{% endmath %}為0，{% math %}b(x) \ \ = \ \ b_4x^4 \ \ + \ \ b_3x^3 \ \ + \ \ b_2x^2 \ \ + \ \ b_1x \ \ + \ \ 1{% endmath %}，如果{% math %}b(x){% endmath %}是primitive多項式，則此LFSR週期最大，可產生m-sequence。  
 (Primitive polynomial之後上課會證明)   
 
-cryptanalysis(可預測)：LFSR若長度為n，則已知2n個連續output就可以得知後續所有(2n-1-2n)個output，解N元一次方程式。
+cryptanalysis(可預測)：LFSR若長度為n，則已知2n個連續output就可以得知後續所有($2^n$-1-2n)個output，解N元一次方程式。
 
 由於有上述預測攻擊，後來就有利用Nonlinear mapping的方法產生PN sequence。
 
