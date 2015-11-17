@@ -1,6 +1,7 @@
 title: The Attack and Defense of Computers-5
 date: 2015-10-25 11:11:26
 tags: The Attack and Defense of Computers
+categories: The Attack and Defense of Computers
 ---
 來源：[Internet Worms, Buffer Overflow Attacks, and Heap Overflow Attacks (43 ~ 82)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/2_BOA.ppt)
 

@@ -1,6 +1,7 @@
 title: Applied Cryptography-6
 date: 2015-10-28 16:25:35
 tags: Applied Cryptography
+categories: Applied Cryptography
 ---
 來源：[chapter 3 (33 ~ 49)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-3%20Number%20Theory.pdf)
 

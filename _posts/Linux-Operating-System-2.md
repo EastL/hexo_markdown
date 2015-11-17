@@ -1,6 +1,7 @@
 title: Linux Operating System-2
 date: 2015-10-15 20:04:06
 tags: Linux Operating System
+categories: Linux Operating System
 ---
 來源：[Introduction (64~98)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/linuxLecture_3_9-1.ppt)
 

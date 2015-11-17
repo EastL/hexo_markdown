@@ -1,6 +1,7 @@
 title: Linux Operating System-5
 date: 2015-10-26 21:55:23
 tags: Linux Operating System
+categories: Linux Operating System
 ---
 來源：[Introduction and Memory Addressing: Segmentation Unit (80 ~ 100)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/linuxLecture_3_9-2.ppt)，[Memory Addressing: Paging Unit (1 ~ 18)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/linuxLecture_3_9-3.ppt)
 

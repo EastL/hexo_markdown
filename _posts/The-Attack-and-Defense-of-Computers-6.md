@@ -1,6 +1,7 @@
 title: The Attack and Defense of Computers-6
 date: 2015-11-05 09:30:33
 tags: The Attack and Defense of Computers
+categories: The Attack and Defense of Computers
 ---
 來源：[Drive-by Download(83 ~ 106)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/2_BOA.ppt)，[Botnet(1 ~ 10)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/2_1_Botnet.ppt)
 

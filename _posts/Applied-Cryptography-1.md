@@ -1,6 +1,7 @@
 title: Applied Cryptography-1
 date: 2015-09-28 11:21:06
 tags: Applied Cryptography
+categories: Applied Cryptography
 ---
 來源 ： [chapter 1 (1~23 and 29)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-1%20Introduction%20to%20Cryptography.pdf), [Prove equivalence of Diffie-Hellman shared secret](http://math.stackexchange.com/questions/61358/prove-equivalence-of-diffie-hellman-shared-secret)
 

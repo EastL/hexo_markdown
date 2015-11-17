@@ -1,6 +1,7 @@
 title: Linux Operating System-3
 date: 2015-10-16 12:19:29
 tags: Linux Operating System
+categories: Linux Operating System
 ---
 來源：[Introduction (99 ~ 116)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/linuxLecture_3_9-1.ppt)，[Introduction and Memory Addressing: Segmentation Unit (1 ~ 20)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/linuxLecture_3_9-2.ppt)
 <h2> Execution Mode of IA32 </h2>

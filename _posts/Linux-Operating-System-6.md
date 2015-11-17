@@ -1,6 +1,7 @@
 title: Linux Operating System-6
 date: 2015-11-01 16:57:31
 tags: Linux Operating System
+categories: Linux Operating System
 ---
 來源：[Memory Addressing: Paging Unit (18 ~ 47)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/linuxLecture_3_9-3.ppt)，[wiki:Paging](http://wiki.osdev.org/Paging)
 

@@ -1,6 +1,7 @@
 title: The Attack and Defense of Computers (1~3)
 date: 2015-10-12 21:06:59
 tags: The Attack and Defense of Computers
+categories: The Attack and Defense of Computers
 ---
 來源：[Malware: Logic Bombs, Key Logger, URL Injection, Browser Hijackers, Trojan Horses, and Spyware](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/1_malware.ppt)，[Internet Worms, Buffer Overflow Attacks, and Heap Overflow Attacks (1~20)](http://www.csie.ncu.edu.tw/~hsufh/COURSES/FALL2015/2_BOA.ppt)
 

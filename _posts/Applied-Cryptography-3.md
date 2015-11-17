@@ -1,6 +1,7 @@
 title: Applied Cryptography-3
 date: 2015-10-10 23:38:40
 tags: Applied Cryptography
+categories: Applied Cryptography
 ---
 來源：[chapter 2 (23~51)](/papers/Chapter2.pdf)
 

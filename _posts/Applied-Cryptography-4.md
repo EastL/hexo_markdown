@@ -1,6 +1,7 @@
 title: Applied Cryptography-4
 date: 2015-10-17 11:18:48
 tags: Applied Cryptography
+categories: Applied Cryptography
 ---
 來源：[chapter 2(51~54)](http://eastl.github.io/papers/Chapter2.pdf)，[chapter 3(1~23)](http://staff.csie.ncu.edu.tw/yensm/lecture/Cryptography/Chapter-3%20Number%20Theory.pdf)
 
