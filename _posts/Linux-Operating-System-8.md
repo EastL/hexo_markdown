@@ -40,6 +40,12 @@ Phase one只會用到實體記憶體中的24MB，phase two則是會用到所有�
 
 <h4> RAM Size Is More Than 4096MB </h4>
 
+這邊mapping方式比較特別，前面的0 ~ 443 entry各自對應到了2MB的實體記憶體，第443 entry透過4KB的page table對應到1MB的page frame，而最後的68個entry則是保留給noncontiguous memory allocation。
 
+![](/images/phase_two_more.jpg)
+
+最後要注意的是，經過initialized後kernel會將swapper_pg_dir複製到initial_page_table，然後再對initial_page_table做存取動作。
+
+![](/images/clone_page_range.jpg)
 
 
