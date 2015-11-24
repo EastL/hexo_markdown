@@ -29,3 +29,11 @@ categories:  Applied Cryptography
 ![](/images/strong_prime_struct.jpg)
 
 這結構是這樣的：一個大質數P在+1或-1後一定能被2分解，分解完後如果還有其他小質數沒關係，但一定要有一個很大的質數在，而這個很大的質數暫且稱做P'，而P'再經過+1或-1後，仍然還要有剛剛講的特性，必須分解完後還要再擁有一個較大的質數，此結構稱為strong prime。雖然現在的[generalized number field (GNF)](https://en.wikipedia.org/wiki/General_number_field_sieve) sieve分解方法不管你是不是strong prime都沒差，不過有些特殊系統還是會需要用到此特性。
+
+而在選擇質數pq時，最好不要選擇太接近的值，不然很容易被暴力破解開來。考慮下列式子：
+
+<center> {% math %} n \ \ = \ \ pq, \ \ ( \frac{p \ \ + \ \ q}{2})^2 \ \ - \ \ pq \ \ = \ \ ( \frac{p \ \ - \ \ q}{2})^2 {% endmath %}  </center>
+
+則我們能利用$ \sqrt{n}$來猜pq。舉個例子：假設p=13, q=11，則$ \sqrt{n} \ \ \approx \ \ 12 $，我們先猜$ \frac{p \ \ + \ \ q}{2} \ \ = \ \ 12$，代回剛剛式子很快就能得出p=13, q=11，如果代出來不對則繼續猜13,14.....，p跟q很接近時很快就會被代出來。而有些情況為了讓解密時加速會選較小的d，有一種針對d小於$ \frac{1}{3} N^{ \frac{1}{4}}$情況的攻擊，[Wieners attack](https://en.wikipedia.org/wiki/Wiener%27s_attack)，在幾分鐘內就能解出pq。
+
+
